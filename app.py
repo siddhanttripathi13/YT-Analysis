@@ -4,6 +4,7 @@ import pandas as pd
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 import plotly.express as px
 
 # Loading data
@@ -11,39 +12,67 @@ channel_df = pd.read_csv('./data/channel_stats.csv')
 video_df = pd.read_csv('./data/video_data.csv')
 
 # Set up the app
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
 
-# Define the layout of the app
-app.layout = html.Div([
-    html.H1([html.Img(src="/assets/YouTube_Logo.png", className="logo"),
-            "YouTube Analytics Dashboard"], className="title"),
-    html.Div([
-        html.Label("Select a channel:", style={'display': 'inline-block'}),
-        dcc.Dropdown(
-            id="channel-dropdown",
-            options=[{"label": "All", "value": "All"}] + [{"label": channel,
-                                                           "value": channel} for channel in channel_df["channelName"].unique()],
-            value="All",
-            multi=False,
-            style={'display': 'inline-block'}
-        )
-    ], style={'text-align': 'center'}),
-    html.Div([
-        html.Div(dcc.Graph(id="subscriber-count-graph"),
-                 className="six columns"),
-        html.Div(dcc.Graph(id="view-count-graph"), className="six columns")
-    ], className="row"),
-    html.Div([
-        html.Div(dcc.Graph(id="view-count-violin"), className='four columns'),
-        html.Div(dcc.Graph(id="view-comment-scatter"),
-                 className='four columns'),
-        html.Div(dcc.Graph(id="view-like-scatter"), className='four columns')
-    ], className="row"),
-    html.Div([
-        html.Div(dcc.Graph(id="best-performing"), className="six columns"),
-        html.Div(dcc.Graph(id="worst-performing"), className="six columns")
-    ], className="row")
-], style={"background-color": "#121212", "color": "#ffffff"})
+# Define app layout
+app.layout = dbc.Container([
+
+    dbc.Row([
+
+        dbc.Col(html.H1([html.Img(src="/assets/YouTube_Logo.png")]),
+                width={'size': 1, 'offset': 1}),
+
+        dbc.Col(html.H1("YouTube Analytics Dashboard"),
+                width={'size': 6, 'offset': 0})
+
+    ], justify='center', align='center'),
+
+    dbc.Row([
+
+        dbc.Col([html.P('Select Channel',
+                        style={'textDecoration': 'underline'},
+                        className="text-muted"),
+
+                dcc.Dropdown(id="channel-dropdown", multi=False,
+                             options=[{"label": "All", "value": "All"}] + [{"label": channel, "value": channel}
+                                                                           for channel in channel_df["channelName"].unique()],
+                             value='All',
+                             clearable=False,
+                             className='text-black',
+                             style={'width': '60%'}),
+
+                dcc.Graph(id="subscriber-count-graph", figure={})
+                 ], width={'size': 5, 'offset': 0}),
+
+        dbc.Col(dcc.Graph(id="view-count-graph", figure={}),
+                width={'size': 5, 'offset': 0})
+
+    ], justify='center', align='end'),
+
+    dbc.Row([
+
+        dbc.Col(dcc.Graph(id="view-count-violin", figure={}),
+                width={'size': 4, 'offset': 0}),
+
+        dbc.Col(dcc.Graph(id="view-comment-scatter", figure={}),
+                width={'size': 4, 'offset': 0}),
+
+        dbc.Col(dcc.Graph(id="view-like-scatter", figure={}),
+                width={'size': 4, 'offset': 0})
+
+    ], justify='center', align='end'),
+
+    dbc.Row([
+
+        dbc.Col(dcc.Graph(id="best-performing", figure={}),
+                width={'size': 4, 'offset': 0}),
+
+        dbc.Col(dcc.Graph(id="worst-performing", figure={}),
+                width={'size': 4, 'offset': 0})
+
+    ], justify='around', align='end')
+
+], fluid=True)
 
 # Define the callbacks for the app
 @app.callback(
@@ -70,18 +99,18 @@ def update_graphs(selected_channel):
     # Create a bar chart of subscriber count by channel
     subscriber_fig = px.bar(channel_data, x="channelName",
                             y="subscriberCount", title=f"Subscriber Count - {title_suffix}")
-    
+
     # Create a bar chart of view count by channel
     view_fig = px.bar(channel_data, x="channelName",
                       y="viewCount", title=f"View Count - {title_suffix}")
-    
+
     # Update bar chart based on selected channel
     if selected_channel != "All":
         subscriber_fig.update_traces(marker_color=[
                                      "red" if name == selected_channel else "grey" for name in channel_data["channelName"]])
         view_fig.update_traces(marker_color=[
                                "red" if name == selected_channel else "grey" for name in channel_data["channelName"]])
-        
+
     # Create a violin plot of view count by channel
     view_violin = px.violin(video_data, x="channelTitle", y="viewCount",
                             title=f"View Count Distribution - {title_suffix}")
@@ -144,7 +173,6 @@ def update_graphs(selected_channel):
         font_color="#ffffff"
     )
 
-    
     return subscriber_fig, view_fig, view_violin, view_comment_scatter, view_like_scatter, best_performing, worst_performing
 
 
