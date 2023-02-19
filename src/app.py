@@ -8,8 +8,8 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 
 # Loading data
-channel_df = pd.read_csv('./data/channel_stats.csv')
-video_df = pd.read_csv('./data/video_data.csv')
+channel_df = pd.read_csv('data/channel_stats.csv')
+video_df = pd.read_csv('data/video_data.csv')
 
 # Set up the app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
