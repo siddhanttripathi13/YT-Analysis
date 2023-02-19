@@ -30,8 +30,10 @@ app.layout = dbc.Container([
     
     dbc.Row([
         
-        dbc.Col(html.A(children='GitHub Repo', href="https://github.com/siddhanttripathi13/YT-Analysis", target="_blank"),
-                width={'size': 8, 'offset': 4}),
+        dbc.Col(html.A(children='GitHub Repo',
+                    href="https://github.com/siddhanttripathi13/YT-Analysis",
+                    target="_blank"),
+                    width={'size': 8, 'offset': 4}),
 
     dbc.Row([
 
