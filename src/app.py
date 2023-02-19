@@ -17,7 +17,7 @@ server = app.server
 
 # Define app layout
 app.layout = dbc.Container([
-
+    
     dbc.Row([
 
         dbc.Col(html.H1([html.Img(src="/assets/YouTube_Logo.png")]),
@@ -132,6 +132,7 @@ def update_graphs(selected_channel):
     worst_performing = px.bar(video_data.sort_values('viewCount', ascending=True)[0:9],
                               x="title", y="viewCount", title=f"Worst performing videos - {title_suffix}")
 
+    # Updating plot backgrounds to match dark theme
     subscriber_fig.update_layout(
         plot_bgcolor="rgba(0, 0, 0, 0)",
         paper_bgcolor="rgba(0, 0, 0, 0)",

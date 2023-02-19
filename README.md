@@ -7,3 +7,5 @@ This is a repository for analyzing data about popular Data Science YouTube chann
 
 
 Overall, this repositoy is useful for those who want to learn using YouTube API to retrieve data for analysis as well as setup a plotly dash app to showcase a dashboard of the analysed data.
+
+<a href="https://youtube-dashboard.onrender.com/"> YouTube Analytics Dashboard</a>
