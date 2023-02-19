@@ -13,6 +13,7 @@ video_df = pd.read_csv('./data/video_data.csv')
 
 # Set up the app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
+server = app.server
 
 # Define app layout
 app.layout = dbc.Container([
